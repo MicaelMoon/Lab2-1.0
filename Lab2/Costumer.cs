@@ -1,6 +1,6 @@
 ﻿namespace Lab2
 {
-    class Account
+    internal abstract class Costumer
     {
         //Tydligen behövs forfatande något här?
         private string username;
@@ -8,7 +8,7 @@
         public List<Item> userCart = new List<Item>();
 
 
-        public Account(string username, string password)
+        public Costumer(string username, string password)
         {
             this.username = username;
             this.password = password;
@@ -16,17 +16,27 @@
 
 
         public string Username
-        {    //Accesers = Special method
+        {
             get { return username; }
         }
+
         public string Password //?????
         {
             get { return this.password; }
             set { password = value; } 
         }
+
+        public override string ToString()
+        {
+            return $"Username: {Username}\nPassword: {Password}\nItem amount: {userCart.Count}";
+        }
+
         public bool VerifyPassword(string password)
         {
-            if(Password == password)
+            Console.Write("Please verify your password: ");
+            string atempt = Console.ReadLine();
+
+            if (atempt == Password)
             {
                 return true;
             }
@@ -35,7 +45,7 @@
                 return false;
             }
         }
-        public void GoShopping(List<Item> itemList, Account ID)
+        public void GoShopping(List<Item> itemList, int ID)
         {
             Console.Clear();
             Console.WriteLine("//Items avalable\\\\");
@@ -50,11 +60,9 @@
                 Console.WriteLine($"{i + 1}. {userCart[i].name}");
             }
 
-
-            int choice = Convert.ToInt32(Console.ReadLine());
-
             try
             {
+                int choice = Convert.ToInt32(Console.ReadLine());
                 if (choice != 0)
                 {
                     userCart.Add(itemList[choice - 1]);
@@ -62,17 +70,17 @@
                 }
                 else if (choice == 0)
                 {
-                    ID.CompressStacks();
+                    CompressStacks();
                     Program.LoggedIn(ID);
                 }
                 else
                 {
-                    ID.GoShopping(itemList, ID);
+                    GoShopping(itemList, ID);
                 }
             }
             catch
             {
-                ID.GoShopping(itemList, ID);
+                GoShopping(itemList, ID);
             }
         }
 
@@ -93,32 +101,49 @@
                 userCart[i].price = userCart[i].price * userCart[i].stack;
             }
         }
-        public void ShopingCart(Account ID)
+        public virtual double ShopingCart(int ID) //Broken********************
         {
             double totalCost = 0;
-            Console.WriteLine("\nYour shoping cart contains\n");
+            Console.WriteLine("\nYour shoping cart contains\n"); //////////////////////////////////////////////////////////////////
             for (int i = 0; i < userCart.Count; i++)
             {
-                Console.WriteLine($"{userCart[i].name} | Quantity price = {userCart[i].priceOriginal}\n" +
-                    $"Quantity: {userCart[i].stack} | Combined price = {userCart[i].price}\n");
+                Console.WriteLine($"{userCart[i].stack} {userCart[i].name} " +
+                    $"| {userCart[i].priceOriginal} a piece | Combined price = {userCart[i].price}\n");
             }
 
             foreach (Item i in userCart)
             {
                 totalCost += i.price;
             }
-
-            Console.WriteLine($"Total = {Math.Round(totalCost, 2)}");
+            Console.WriteLine($"Total = {Math.Round(totalCost, 2)}"); // onödig kod?
+            return Math.Round(totalCost, 2);
         }
-        public double CheckMemberShip(MemberBronze ID)
-        {
 
-        }
-        public void CheckOut(Account ID)
+        public virtual void CheckOut(int ID)    //************************* Needed?
         {
-            ShopingCart(ID);
-            
-            ID.Discount
+            double price = ShopingCart(ID);
+
+            if (VerifyPassword(Password))
+            {
+                userCart.Clear();
+                Console.WriteLine("Thank you for shoping. Have a nice day!");
+                Console.ReadKey();
+                Program.Menu();
+            }
+            else
+            {
+                Console.WriteLine("Wrong password, would you like to try again?\n[1] Yes\n[2] No");
+                int choice = Convert.ToInt32(Console.ReadLine);
+                switch (choice)
+                {
+                    case 1:
+                        CheckOut(ID);
+                        break;
+                    default:
+                        Program.LoggedIn(ID);
+                        break;
+                }
+            }
         }
     }
 }
