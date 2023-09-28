@@ -22,41 +22,27 @@ namespace Lab2
             set { _level = value; }
         }
 
+
+
         public override void CheckOut(int ID)
         {
             Console.Clear();
-            int currencyCheck = 0;
-            double price = 0;
-            Console.WriteLine("What currency would you like to pay in?\n[1] SEK\n[2] USD\n[3] Euro");
-            string choice = Console.ReadLine();
-
-            switch (choice)
-            {
-                case "1":
-                    price = Item.ConvertToSEK(ShopingCart(ID));
-                    break;
-                case "2":
-                    price = Item.ConvertToUSD(ShopingCart(ID));
-                    break;
-                default:
-                    ShopingCart(ID);
-                    break;
-            }
+            double price = ShopingCart(ID);
 
             if (Level != MemberLevel.Iron)
             {
                 double newprice = Discount(price);
                 Console.WriteLine($"\nYour member rank at our store is {Level} and you get a discount of {100 - (int)Level}%");
-                switch (choice)
-                {   
-                    case "1":
+                switch (_currency)
+                {
+                    case Currency.SEK:
                         Console.WriteLine($"Total price including doscount is: {newprice} kr\n");
                         break;
-                    case "2":
+                    case Currency.USD:
                         Console.WriteLine($"Total price including doscount is: ${newprice}\n");
                         break;
-                    default:
-                        Console.WriteLine($"Total price including doscount is: {(newprice)}\n");
+                    case Currency.Euro:
+                        Console.WriteLine($"Total price including doscount is: {newprice} euro\n");
                         break;
 
                 }
@@ -64,6 +50,11 @@ namespace Lab2
 
             if (VerifyPassword(Password))
             {
+                for (int i = 0; i < userCart.Count; i++)
+                {
+                    userCart[1].stack = 1;
+                }
+
                 userCart.Clear();
                 Console.WriteLine("Thank you for shoping. Have a nice day!");
                 Console.ReadKey();

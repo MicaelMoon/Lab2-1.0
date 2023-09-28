@@ -11,9 +11,10 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
 {               //Future potention problem | When sutomer is done shoping the price after increasing stack might need to be reset
     internal class Program
     {
-        public static List<Item> itemList = new List<Item>();
+        public static List<Item> itemList = new List<Item>();//***********************************
         public static List<Costumer> userList = new List<Costumer>();
         public static int userAmount = 0;
+        public static Costumer _currentUser;
 
 
         
@@ -21,6 +22,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
         public static void Menu()
         {
             Console.Clear();
+            _currentUser = null;
             Console.WriteLine("[1] Log in\n[2] Sign up");
             string choice = (Console.ReadLine());
 
@@ -52,6 +54,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                 {
                     if (password == userList[i].Password)
                     {
+                        _currentUser = userList[i];
                         LoggedIn(i);
                     }
 
@@ -63,14 +66,14 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
 
 
             Console.WriteLine("Username was not found in our system.\nWould you like to regiter?\n[1] Yes\n[2] No");
-            int choice= Convert.ToInt32(Console.ReadLine());
+            string choice= Console.ReadLine();
 
             switch (choice)
             {
-                case 1:
+                case "1":
                     SignUp();
                     break;
-                case 2:
+                case "2":
                     LogIn();
                     break;
                 default:
@@ -114,7 +117,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                 Member account = new Member(username, password, MemberLevel.Iron);
                 userList.Add(account);
 
-                Console.WriteLine("What membership level would you like?\n" +
+                Console.WriteLine("\nWhat membership level would you like?\n" +
                 "[0] Iron | No discounts\n" +
                 "[1] Bronze | 5% discount on purcheses\n" +
                 "[2] Silver | 10% discount on purcheses\n" +
@@ -161,8 +164,8 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
         public static void LoggedIn(int ID)
         {
             Console.Clear();
-            Console.WriteLine($"Welcome {userList[ID].Username}\nChoose what you would like to do next\n" +
-                $"[0] Log out\n[1] Go shoping\n[2] See shoping cart\n[3] Go to checkout");
+            Console.WriteLine($"Welcome {_currentUser.Username}\nChoose what you would like to do next\n" +
+                $"[0] Log out\n[1] Go shoping\n[2] See shoping cart\n[3] Go to checkout\n[4] Change currency");
 
             string choice= (Console.ReadLine());
 
@@ -184,7 +187,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     break;
                 case "1":
                     Console.Clear();
-                    userList[ID].GoShopping(ID);    //Spammar man en tom readline i metoden loggas den ut OCH den tar bot varor från litan!!!!
+                    userList[ID].GoShopping(ID);
                     break;
                 case "2":
                     userList[ID].ShopingCart(ID);
@@ -194,6 +197,29 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     break;
                 case "3":
                     userList[ID].CheckOut(ID); //***************************
+                    break;
+                case "4":
+                    Console.Clear();
+                    Console.WriteLine("[1] SEK\n[2] USD\n[3] Euro");
+                    string currencyChoice = Console.ReadLine();
+
+                    switch (currencyChoice)
+                    {
+                        case "1":
+                            _currentUser._currency = Currency.SEK;
+                            break;
+                        case "2":
+                            _currentUser._currency = Currency.USD;
+                            break;
+                        case "3":
+                            _currentUser._currency = Currency.Euro;
+                            break;
+                        default:
+                            break;
+                    }
+                    Console.WriteLine($"Currency is now set to {_currentUser._currency}\n\nPress any key");
+                    Console.ReadKey();
+                    LoggedIn(ID);
                     break;
                 default:
                     LoggedIn(ID);
@@ -208,9 +234,9 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
             Item sandwitch = new Item("Sandwitch", 1.69);
             Item soda = new Item("Soda", 2);
 
-            itemList.Add(apple);
-            itemList.Add(sandwitch);
-            itemList.Add(soda);
+            Item.itemList.Add(apple);
+            Item.itemList.Add(sandwitch);
+            Item.itemList.Add(soda);
 
             LoadUsers();
         }

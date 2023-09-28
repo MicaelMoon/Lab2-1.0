@@ -6,6 +6,7 @@ namespace Lab2
     {
         private string username;
         private string password;
+        public Currency _currency = Currency.SEK;
         public List<Item> userCart = new List<Item>();
 
 
@@ -52,22 +53,47 @@ namespace Lab2
             Console.Clear();
             Console.WriteLine("//Items avalable\\\\");
             Console.WriteLine("[0] Press to go back\n");
-            for (int i = 0; i < Program.itemList.Count; i++)
+
+            //Currency check
+            switch (_currency)
             {
-                Console.WriteLine($"[{i + 1}] {Program.itemList[i].name} = {Math.Round(Program.itemList[i].price, 2)}");
-            }
-            Console.WriteLine();
-            for (int i = 0; i < userCart.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {userCart[i].name}");
+                case Currency.SEK:
+                    for (int i = 0; i < Item.itemList.Count; i++)
+                    {
+                        Console.WriteLine($"[{i + 1}] {Item.itemList[i].name} = {Math.Round(Item.itemList[i].ConvertOriginalPriceToSEK(), 2)} kr");
+                    }
+                    break;
+                case Currency.USD:
+                    for (int i = 0; i < Item.itemList.Count; i++)
+                    {
+                        Console.WriteLine($"[{i + 1}] {Item.itemList[i].name} = | $ {Math.Round(Item.itemList[i].ConvertOriginalPriceToUSD(), 2)}");
+                    }
+                    break;
+                case Currency.Euro:
+                    for (int i = 0; i < Item.itemList.Count; i++)
+                    {
+                        Console.WriteLine($"[{i + 1}] {Item.itemList[i].name} = {Math.Round(Item.itemList[i].priceOriginal, 2)} euro");
+                    }
+                    break;
             }
 
+            //Prints out what you've baught so far
+            CompressStacks();
+
+            Console.WriteLine($"********************************************************" +
+                $"\n//Your cart contains\\\\\n");
+            for (int i = 0; i < userCart.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {userCart[i].name} x{userCart[i].stack}");
+            }
+
+            //Adds chosen item to your cart
             try
             {
                 int choice = Convert.ToInt32(Console.ReadLine());
                 if (choice != 0)
                 {
-                    userCart.Add(Program.itemList[choice - 1]);
+                    userCart.Add(Item.itemList[choice - 1]);
                     GoShopping(ID);
                 }
                 else if (choice == 0)
@@ -86,7 +112,6 @@ namespace Lab2
             }
         }
 
-
         public void CompressStacks()
         {
             for (int i = 0; i < userCart.Count; i++)    //Stacks all  equal items
@@ -100,26 +125,53 @@ namespace Lab2
                         j--;
                     }
                 }
-                userCart[i].price = userCart[i].price * userCart[i].stack;
+                userCart[i].price = userCart[i].priceOriginal * userCart[i].stack;
             }
         }       
 
-        public double ShopingCart(int ID) //Broken********************
+        public double ShopingCart(int ID)
         {
             double totalCost = 0;
-            Console.WriteLine("\nYour shoping cart contains\n"); //////////////////////////////////////////////////////////////////
+            Console.WriteLine("\nYour shoping cart contains\n");
             for (int i = 0; i < userCart.Count; i++)
             {
-                Console.WriteLine($"{userCart[i].stack} {userCart[i].name} " +
-                    $"| {Math.Round(userCart[i].priceOriginal, 2)} a piece |" +
+                Console.Write($"{userCart[i].name} x{userCart[i].stack}");
+
+                switch (_currency)
+                {
+                    case Currency.SEK:
+                        Console.WriteLine($" | {Math.Round(userCart[i].ConvertOriginalPriceToSEK(), 2)} kr a piece |" +
+                    $" Stack price = {Math.Round(userCart[i].ConvertToSEK(), 2)}\n");
+                        break;
+                    case Currency.USD:
+                        Console.WriteLine($" | ${Math.Round(userCart[i].ConvertOriginalPriceToUSD(), 2)} a piece |" +
+                    $" Stack price = {Math.Round(userCart[i].ConvertToUSD(), 2)}\n");
+                        break;
+                    case Currency.Euro:
+                        Console.WriteLine($" | {Math.Round(userCart[i].priceOriginal, 2)} euro a piece |" +
                     $" Stack price = {Math.Round(userCart[i].price, 2)}\n");
+                        break;
+                }   
             }
 
             foreach (Item i in userCart)
             {
                 totalCost += i.price;
             }
-            Console.WriteLine($"Total = {Math.Round(totalCost, 2)}"); // onödig kod?
+
+            switch (_currency)
+            {
+                case Currency.SEK:
+                    Console.WriteLine($"Total = {Math.Round(Item.ConvertToSEK(totalCost), 2)}");
+                    break;
+                case Currency.USD:
+                    Console.WriteLine($"Total = {Math.Round(Item.ConvertToUSD(totalCost), 2)}");
+                    break;
+                case Currency.Euro:
+                    Console.WriteLine($"Total = {Math.Round(totalCost, 2)}");
+                    break;
+            }
+
             return Math.Round(totalCost, 2);
         }
 
