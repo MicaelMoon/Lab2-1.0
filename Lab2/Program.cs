@@ -149,6 +149,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
 
 
                 Console.WriteLine($"\nWelcome {userList[userAmount].Username} \nYour account was sucessfully registered!\nYour rank is {account.Level}\n\nPress any key...");
+                account.LoadItems();
                 userAmount++;
                 Console.ReadKey();
                 Menu();
@@ -228,26 +229,19 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
             string level = Convert.ToString(MemberLevel.Bronze);
         }
         
-        public void LoadItems()
-        {
-            Item apple = new Item("Apple", 0.59);
-            Item sandwitch = new Item("Sandwitch", 1.69);
-            Item soda = new Item("Soda", 2);
 
-            Item.itemList.Add(apple);
-            Item.itemList.Add(sandwitch);
-            Item.itemList.Add(soda);
-
-            LoadUsers();
-        }
         public void LoadUsers()
         {
             string userFile = "C:\\Users\\frans\\OneDrive\\Skrivbord\\Lab2-f4f724fafc093e198567414b4e804e6c66635dac\\Lab2\\TextFile1.txt";
 
             userList = UpploadCostumerFromTextFile(userFile);
 
+            for (int i = 0; i < userList.Count; i++)
+            {
+                userList[i].LoadItems();
+            }
+
             userAmount = userList.Count();
-            Menu();
         }
 
         static List<Costumer> UpploadCostumerFromTextFile(string fileName)
@@ -295,7 +289,8 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
         public static void Main(string[] args)
         {
             var minButik = new Program();
-            minButik.LoadItems();
+            minButik.LoadUsers();
+            Menu();
         }
     }
 }

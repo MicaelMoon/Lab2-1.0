@@ -8,6 +8,7 @@ namespace Lab2
         private string password;
         public Currency _currency = Currency.SEK;
         public List<Item> userCart = new List<Item>();
+        public List<Item> itemList = new List<Item>();
 
 
         public Costumer(string username, string password)
@@ -31,6 +32,16 @@ namespace Lab2
         public override string ToString()
         {
             return $"Username: {Username}\nPassword: {Password}\nItem amount: {userCart.Count}";
+        }
+        public void LoadItems()
+        {
+            Item apple = new Item("Apple", 0.59);
+            Item sandwitch = new Item("Sandwitch", 1.69);
+            Item soda = new Item("Soda", 2);
+
+            itemList.Add(apple);
+            itemList.Add(sandwitch);
+            itemList.Add(soda);
         }
 
         public bool VerifyPassword(string password)
@@ -58,21 +69,21 @@ namespace Lab2
             switch (_currency)
             {
                 case Currency.SEK:
-                    for (int i = 0; i < Item.itemList.Count; i++)
+                    for (int i = 0; i < itemList.Count; i++)
                     {
-                        Console.WriteLine($"[{i + 1}] {Item.itemList[i].name} = {Math.Round(Item.itemList[i].ConvertOriginalPriceToSEK(), 2)} kr");
+                        Console.WriteLine($"[{i + 1}] {itemList[i].name} = {Math.Round(itemList[i].ConvertOriginalPriceToSEK(), 2)} kr");
                     }
                     break;
                 case Currency.USD:
-                    for (int i = 0; i < Item.itemList.Count; i++)
+                    for (int i = 0; i < itemList.Count; i++)
                     {
-                        Console.WriteLine($"[{i + 1}] {Item.itemList[i].name} = | $ {Math.Round(Item.itemList[i].ConvertOriginalPriceToUSD(), 2)}");
+                        Console.WriteLine($"[{i + 1}] {itemList[i].name} = | $ {Math.Round(itemList[i].ConvertOriginalPriceToUSD(), 2)}");
                     }
                     break;
                 case Currency.Euro:
-                    for (int i = 0; i < Item.itemList.Count; i++)
+                    for (int i = 0; i < itemList.Count; i++)
                     {
-                        Console.WriteLine($"[{i + 1}] {Item.itemList[i].name} = {Math.Round(Item.itemList[i].priceOriginal, 2)} euro");
+                        Console.WriteLine($"[{i + 1}] {itemList[i].name} = {Math.Round(itemList[i].priceOriginal, 2)} euro");
                     }
                     break;
             }
@@ -80,12 +91,8 @@ namespace Lab2
             //Prints out what you've baught so far
             CompressStacks();
 
-            Console.WriteLine($"********************************************************" +
-                $"\n//Your cart contains\\\\\n");
-            for (int i = 0; i < userCart.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {userCart[i].name} x{userCart[i].stack}");
-            }
+            Console.WriteLine($"********************************************************");
+            ShopingCart(ID);
 
             //Adds chosen item to your cart
             try
@@ -93,7 +100,7 @@ namespace Lab2
                 int choice = Convert.ToInt32(Console.ReadLine());
                 if (choice != 0)
                 {
-                    userCart.Add(Item.itemList[choice - 1]);
+                    userCart.Add(itemList[choice - 1]);
                     GoShopping(ID);
                 }
                 else if (choice == 0)
@@ -132,7 +139,7 @@ namespace Lab2
         public double ShopingCart(int ID)
         {
             double totalCost = 0;
-            Console.WriteLine("\nYour shoping cart contains\n");
+            Console.WriteLine("\nYour shoping cart contains\n\n");
             for (int i = 0; i < userCart.Count; i++)
             {
                 Console.Write($"{userCart[i].name} x{userCart[i].stack}");
@@ -162,17 +169,16 @@ namespace Lab2
             switch (_currency)
             {
                 case Currency.SEK:
-                    Console.WriteLine($"Total = {Math.Round(Item.ConvertToSEK(totalCost), 2)}");
+                    Console.WriteLine($"Total = {Math.Round(Item.ConvertToSEK(totalCost), 2)} kr");
                     break;
                 case Currency.USD:
-                    Console.WriteLine($"Total = {Math.Round(Item.ConvertToUSD(totalCost), 2)}");
+                    Console.WriteLine($"Total = ${Math.Round(Item.ConvertToUSD(totalCost), 2)}");
                     break;
                 case Currency.Euro:
-                    Console.WriteLine($"Total = {Math.Round(totalCost, 2)}");
+                    Console.WriteLine($"Total = {Math.Round(totalCost, 2)} euro");
                     break;
             }
-
-            return Math.Round(totalCost, 2);
+            return totalCost;
         }
 
         public double ConvertCurency(double price)
@@ -191,6 +197,7 @@ namespace Lab2
                     break;
             }
         }
+        
         public abstract void CheckOut(int ID);
     }
 }

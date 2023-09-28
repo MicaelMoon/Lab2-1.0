@@ -9,16 +9,17 @@ namespace Lab2
     internal class Item
     {
         public string name;
-        public double price;
         public double priceOriginal;
+        public double price;
         public int stack = 1;
-        public static List<Item> itemList = new List<Item>();
 
-        public Item(string name, double price)
+
+        public Item(string name, double priceOriginal)
         {
             this.name = name;
-            this.price = price;
-            this.priceOriginal = price;
+            this.priceOriginal = priceOriginal;
+            this.price = priceOriginal;
+            stack = 1;
         }
 
         public override string ToString()

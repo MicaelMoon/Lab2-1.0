@@ -36,13 +36,13 @@ namespace Lab2
                 switch (_currency)
                 {
                     case Currency.SEK:
-                        Console.WriteLine($"Total price including doscount is: {newprice} kr\n");
+                        Console.WriteLine($"Total price including doscount is: {Math.Round(Item.ConvertToSEK(newprice), 2)} kr\n");
                         break;
                     case Currency.USD:
-                        Console.WriteLine($"Total price including doscount is: ${newprice}\n");
+                        Console.WriteLine($"Total price including doscount is: ${Math.Round(Item.ConvertToUSD(newprice), 2)}\n");
                         break;
                     case Currency.Euro:
-                        Console.WriteLine($"Total price including doscount is: {newprice} euro\n");
+                        Console.WriteLine($"Total price including doscount is: {Math.Round(newprice, 2)} euro\n");
                         break;
 
                 }
@@ -50,9 +50,9 @@ namespace Lab2
 
             if (VerifyPassword(Password))
             {
-                for (int i = 0; i < userCart.Count; i++)
+                for (int i = 0; i < itemList.Count; i++)
                 {
-                    userCart[1].stack = 1;
+                    userCart[i].stack = 1;
                 }
 
                 userCart.Clear();
@@ -78,7 +78,8 @@ namespace Lab2
 
         public double Discount(double price) ////******************Broken
         {
-            price = price * ((int)Level / 10);  
+            double levelToDouble = (int)Level;
+            price = price * (levelToDouble / 100);
             return price;
         }
     }
