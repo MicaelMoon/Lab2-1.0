@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.IO;
+
 
 namespace Lab2  //For next time: plays appropriet methods inside appropriate class as class method
 {               //Future potention problem | When sutomer is done shoping the price after increasing stack might need to be reset
@@ -9,8 +13,10 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
     {
         public static List<Item> itemList = new List<Item>();
         public static List<Costumer> userList = new List<Costumer>();
-        public static int userAmount = 3;
+        public static int userAmount = 0;
 
+
+        
 
         public static void Menu()
         {
@@ -44,7 +50,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
             {
                 if(username == userList[i].Username)
                 {
-                    if (userList[i].VerifyPassword(password))
+                    if (password == userList[i].Password)
                     {
                         LoggedIn(i);
                     }
@@ -133,6 +139,10 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                         SignUp();
                         break;
                 }
+                //Sets fileName to a specifik file on harddrive
+                //FIle.AppendAlltext = a class method puts in your chosen text into text at file location
+                string fileName = "C:\\Users\\frans\\OneDrive\\Skrivbord\\Lab2-f4f724fafc093e198567414b4e804e6c66635dac\\Lab2\\TextFile1.txt";
+                File.AppendAllText(fileName, $"{username},{password},{account.Level}\n");
 
 
                 Console.WriteLine($"\nWelcome {userList[userAmount].Username} \nYour account was sucessfully registered!\nYour rank is {account.Level}\n\nPress any key...");
@@ -174,7 +184,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     break;
                 case "1":
                     Console.Clear();
-                    userList[ID].GoShopping(itemList, ID);    //Spammar man en tom readline i metoden loggas den ut OCH den tar bot varor från litan!!!!
+                    userList[ID].GoShopping(ID);    //Spammar man en tom readline i metoden loggas den ut OCH den tar bot varor från litan!!!!
                     break;
                 case "2":
                     userList[ID].ShopingCart(ID);
@@ -189,17 +199,14 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     LoggedIn(ID);
                     break;
             }
+            string level = Convert.ToString(MemberLevel.Bronze);
         }
-
-
-
-
         
         public void LoadItems()
         {
-            Item apple = new Item("Apple", 7.59);
-            Item sandwitch = new Item("Sandwitch", 27.99);
-            Item soda = new Item("Soda", 5.99);
+            Item apple = new Item("Apple", 0.59);
+            Item sandwitch = new Item("Sandwitch", 1.69);
+            Item soda = new Item("Soda", 2);
 
             itemList.Add(apple);
             itemList.Add(sandwitch);
@@ -209,16 +216,56 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
         }
         public void LoadUsers()
         {
-            Member kund1 = new Member("Knatte", "123", MemberLevel.Bronze);
-            Member kund2 = new Member("Fnatte", "321", MemberLevel.Bronze);
-            Member kund3 = new Member("Tjatte", "213", MemberLevel.Bronze);
+            string userFile = "C:\\Users\\frans\\OneDrive\\Skrivbord\\Lab2-f4f724fafc093e198567414b4e804e6c66635dac\\Lab2\\TextFile1.txt";
 
-            userList.Add(kund1);
-            userList.Add(kund2);
-            userList.Add(kund3);
+            userList = UpploadCostumerFromTextFile(userFile);
 
+            userAmount = userList.Count();
             Menu();
         }
+
+        static List<Costumer> UpploadCostumerFromTextFile(string fileName)
+        {
+            List<Costumer> costumerInFile = new List<Costumer>();
+
+            string[] lines = File.ReadAllLines(fileName);
+
+            foreach(string line in lines)
+            {
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    string[] userData = line.Split(",");
+
+                    if (userData.Length == 3)
+                    {
+                        string username = userData[0];
+                        string password = userData[1];
+                        Member member = new Member(username, password, MemberLevel.Iron);
+
+                        MemberLevel level = MemberLevel.Iron;
+                        switch (userData[2])
+                        {
+                            case "Iron":
+                                member.Level = MemberLevel.Iron;
+                                break;
+                            case "Bronze":
+                                member.Level = MemberLevel.Bronze;
+                                break;
+                            case "Silver":
+                                member.Level = MemberLevel.Silver;
+                                break;
+                            case "Gold":
+                                member.Level = MemberLevel.Gold;
+                                break;
+                        }  
+                        costumerInFile.Add(member);
+
+                    }
+                }
+            }
+            return costumerInFile;
+        }
+
         public static void Main(string[] args)
         {
             var minButik = new Program();

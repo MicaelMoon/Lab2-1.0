@@ -1,8 +1,9 @@
-﻿namespace Lab2
+﻿using System.IO;
+
+namespace Lab2
 {
     internal abstract class Costumer
     {
-        //Tydligen behövs forfatande något här?
         private string username;
         private string password;
         public List<Item> userCart = new List<Item>();
@@ -20,7 +21,7 @@
             get { return username; }
         }
 
-        public string Password //?????
+        public string Password
         {
             get { return this.password; }
             set { password = value; } 
@@ -45,14 +46,15 @@
                 return false;
             }
         }
-        public void GoShopping(List<Item> itemList, int ID)
+
+        public void GoShopping(int ID)
         {
             Console.Clear();
             Console.WriteLine("//Items avalable\\\\");
             Console.WriteLine("[0] Press to go back\n");
-            for (int i = 0; i < itemList.Count; i++)
+            for (int i = 0; i < Program.itemList.Count; i++)
             {
-                Console.WriteLine($"[{i + 1}] {itemList[i].name} = {itemList[i].price}");
+                Console.WriteLine($"[{i + 1}] {Program.itemList[i].name} = {Math.Round(Program.itemList[i].price, 2)}");
             }
             Console.WriteLine();
             for (int i = 0; i < userCart.Count; i++)
@@ -65,8 +67,8 @@
                 int choice = Convert.ToInt32(Console.ReadLine());
                 if (choice != 0)
                 {
-                    userCart.Add(itemList[choice - 1]);
-                    GoShopping(itemList, ID);
+                    userCart.Add(Program.itemList[choice - 1]);
+                    GoShopping(ID);
                 }
                 else if (choice == 0)
                 {
@@ -75,12 +77,12 @@
                 }
                 else
                 {
-                    GoShopping(itemList, ID);
+                    GoShopping(ID);
                 }
             }
             catch
             {
-                GoShopping(itemList, ID);
+                GoShopping(ID);
             }
         }
 
@@ -100,15 +102,17 @@
                 }
                 userCart[i].price = userCart[i].price * userCart[i].stack;
             }
-        }
-        public virtual double ShopingCart(int ID) //Broken********************
+        }       
+
+        public double ShopingCart(int ID) //Broken********************
         {
             double totalCost = 0;
             Console.WriteLine("\nYour shoping cart contains\n"); //////////////////////////////////////////////////////////////////
             for (int i = 0; i < userCart.Count; i++)
             {
                 Console.WriteLine($"{userCart[i].stack} {userCart[i].name} " +
-                    $"| {userCart[i].priceOriginal} a piece | Combined price = {userCart[i].price}\n");
+                    $"| {Math.Round(userCart[i].priceOriginal, 2)} a piece |" +
+                    $" Stack price = {Math.Round(userCart[i].price, 2)}\n");
             }
 
             foreach (Item i in userCart)
@@ -119,31 +123,22 @@
             return Math.Round(totalCost, 2);
         }
 
-        public virtual void CheckOut(int ID)    //************************* Needed?
+        public double ConvertCurency(double price)
         {
-            double price = ShopingCart(ID);
-
-            if (VerifyPassword(Password))
+            Console.WriteLine("What curency would you like to use\n[1] SEK\n[2] USD\n[3] Euro");
+            string choice = Console.ReadLine();
+            switch (choice)
             {
-                userCart.Clear();
-                Console.WriteLine("Thank you for shoping. Have a nice day!");
-                Console.ReadKey();
-                Program.Menu();
-            }
-            else
-            {
-                Console.WriteLine("Wrong password, would you like to try again?\n[1] Yes\n[2] No");
-                int choice = Convert.ToInt32(Console.ReadLine);
-                switch (choice)
-                {
-                    case 1:
-                        CheckOut(ID);
-                        break;
-                    default:
-                        Program.LoggedIn(ID);
-                        break;
-                }
+                case "1":
+                    return Item.ConvertToSEK(price);
+                    break;
+                case "2":
+                    return Item.ConvertToUSD(price);
+                default:
+                    return price;
+                    break;
             }
         }
+        public abstract void CheckOut(int ID);
     }
 }

@@ -22,7 +22,19 @@ namespace Lab2
 
         public override string ToString()
         {
-            return string.Format($"{name} = {priceOriginal}kr");
+            return string.Format($"{name} = {priceOriginal}");
+        }
+
+        //Kanske kan flytta dessa metoder
+        //Default currency = Euro
+        public static double ConvertToSEK(double price)
+        {
+            return Math.Round((price * 11.66), 2);
+        }
+
+        public static double ConvertToUSD(double price)
+        {
+            return Math.Round((price * 1.06), 2);
         }
     }
 }
