@@ -80,7 +80,6 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     Menu();
                     break;
             }
-            Menu();
         }
             
         public static  void SignUp()
@@ -97,6 +96,12 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     SignUp();
 
                 }
+            }
+            if(username.Length < 5)
+            {
+                Console.WriteLine("Your username needs to have at least 5 characters");
+                Console.ReadKey();
+                SignUp();
             }
 
             Console.Write("Choose your password: ");
@@ -160,7 +165,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                 Console.ReadKey();
                 SignUp();
             }
-        }   //Make requirements for character length and other stuff //
+        }
 
         public static void LoggedIn(int ID)
         {
@@ -179,9 +184,13 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     switch (choice1)
                     {
                         case "1":
+                            _currentUser = null;
                             Menu();
                             break;
                         case "2":
+                            LoggedIn(ID);
+                            break;
+                        default:
                             LoggedIn(ID);
                             break;
                     }
@@ -228,7 +237,6 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
             }
             string level = Convert.ToString(MemberLevel.Bronze);
         }
-        
 
         public void LoadUsers()
         {
@@ -241,7 +249,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                 userList[i].LoadItems();
             }
 
-            userAmount = userList.Count();
+            userAmount = userList.Count(); ////
         }
 
         static List<Costumer> UpploadCostumerFromTextFile(string fileName)
@@ -254,6 +262,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
             {
                 if (!string.IsNullOrEmpty(fileName))
                 {
+                    //Creating an array that contains ONE user = username, password, membership
                     string[] userData = line.Split(",");
 
                     if (userData.Length == 3)
@@ -279,7 +288,6 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                                 break;
                         }  
                         costumerInFile.Add(member);
-
                     }
                 }
             }

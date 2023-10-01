@@ -31,8 +31,14 @@ namespace Lab2
 
         public override string ToString()
         {
+            Console.WriteLine($"Username: {Username}\nPassword: {Password}\nItem amount: {userCart.Count}");
+            foreach(Item i in userCart)
+            {
+                Console.WriteLine(i.ToString);
+            }
             return $"Username: {Username}\nPassword: {Password}\nItem amount: {userCart.Count}";
         }
+
         public void LoadItems()
         {
             Item apple = new Item("Apple", 0.59);
