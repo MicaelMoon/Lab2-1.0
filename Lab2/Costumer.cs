@@ -53,9 +53,9 @@ namespace Lab2
         public bool VerifyPassword(string password)
         {
             Console.Write("Please verify your password: ");
-            string atempt = Console.ReadLine();
+            string attempt = Console.ReadLine();
 
-            if (atempt == Password)
+            if (attempt == Password)
             {
                 return true;
             }
@@ -65,7 +65,7 @@ namespace Lab2
             }
         }
 
-        public void GoShopping(int ID)
+        public void GoShopping()
         {
             Console.Clear();
             Console.WriteLine("//Items avalable\\\\");
@@ -96,9 +96,8 @@ namespace Lab2
 
             //Prints out what you've baught so far
             CompressStacks();
-
-            Console.WriteLine($"********************************************************");
-            ShopingCart(ID);
+            Console.WriteLine("*************************************************************************");
+            ShopingCart();
 
             //Adds chosen item to your cart
             try
@@ -107,21 +106,21 @@ namespace Lab2
                 if (choice != 0)
                 {
                     userCart.Add(itemList[choice - 1]);
-                    GoShopping(ID);
+                    GoShopping();
                 }
                 else if (choice == 0)
                 {
                     CompressStacks();
-                    Program.LoggedIn(ID);
+                    Program.LoggedIn();
                 }
                 else
                 {
-                    GoShopping(ID);
+                    GoShopping();
                 }
             }
             catch
             {
-                GoShopping(ID);
+                GoShopping();
             }
         }
 
@@ -142,10 +141,10 @@ namespace Lab2
             }
         }       
 
-        public double ShopingCart(int ID)
+        public double ShopingCart()
         {
             double totalCost = 0;
-            Console.WriteLine("\nYour shoping cart contains\n\n");
+            Console.WriteLine("Your shoping cart contains\n\n");
             for (int i = 0; i < userCart.Count; i++)
             {
                 Console.Write($"{userCart[i].name} x{userCart[i].stack}");
@@ -166,7 +165,6 @@ namespace Lab2
                         break;
                 }   
             }
-
             foreach (Item i in userCart)
             {
                 totalCost += i.price;
@@ -184,6 +182,7 @@ namespace Lab2
                     Console.WriteLine($"Total = {Math.Round(totalCost, 2)} euro");
                     break;
             }
+            Console.WriteLine("*************************************************************************");
             return totalCost;
         }
 
@@ -204,6 +203,6 @@ namespace Lab2
             }
         }
         
-        public abstract void CheckOut(int ID);
+        public abstract void CheckOut();
     }
 }

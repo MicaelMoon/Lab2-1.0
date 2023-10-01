@@ -1,5 +1,4 @@
 ﻿Knatte,123,Bronze
 Fnatte,321,Silver
 Tjatte,213,Gold
-Micael,123,Gold
-Sussanna,Gustav,Bronze
+Micael,123,Iron

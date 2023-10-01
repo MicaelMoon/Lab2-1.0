@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab2
 {
-    internal enum Currency ///////////////
+    internal enum Currency
     {
         SEK,
         USD,

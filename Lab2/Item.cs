@@ -27,7 +27,6 @@ namespace Lab2
             return string.Format($"{name} = {priceOriginal}");
         }
 
-        //Kanske kan flytta dessa metoder
         //Default currency = Euro
 
         public double ConvertOriginalPriceToSEK()

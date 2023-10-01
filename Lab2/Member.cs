@@ -10,7 +10,6 @@ namespace Lab2
     {
         private MemberLevel _level;
 
-
         public Member(string username, string password, MemberLevel level) : base(username, password)
         {
             _level = level;
@@ -22,12 +21,10 @@ namespace Lab2
             set { _level = value; }
         }
 
-
-
-        public override void CheckOut(int ID)
+        public override void CheckOut()
         {
             Console.Clear();
-            double price = ShopingCart(ID);
+            double price = ShopingCart();
 
             if (Level != MemberLevel.Iron)
             {
@@ -67,16 +64,16 @@ namespace Lab2
                 switch (choice1)
                 {
                     case "1":
-                        CheckOut(ID);
+                        CheckOut();
                         break;
                     default:
-                        Program.LoggedIn(ID);
+                        Program.LoggedIn();
                         break;
                 }
             }
         }
 
-        public double Discount(double price) ////******************Broken
+        public double Discount(double price)
         {
             double levelToDouble = (int)Level;
             price = price * (levelToDouble / 100);

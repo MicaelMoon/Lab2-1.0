@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.IO;
 
 
-namespace Lab2  //For next time: plays appropriet methods inside appropriate class as class method
-{               //Future potention problem | When sutomer is done shoping the price after increasing stack might need to be reset
+namespace Lab2
+{
     internal class Program
     {
         public static List<Item> itemList = new List<Item>();//***********************************
@@ -44,7 +44,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
         {
             Console.Clear();
             Console.Write("Username: ");
-            string username = Console.ReadLine();///////////////////////////////
+            string username = Console.ReadLine();
             Console.Write("Password: ");
             string password = Console.ReadLine();
 
@@ -55,7 +55,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     if (password == userList[i].Password)
                     {
                         _currentUser = userList[i];
-                        LoggedIn(i);
+                        LoggedIn();
                     }
 
                     Console.WriteLine("Incorrect password was entered.\nPlease try again\n\nPress any key to continiue...");
@@ -167,7 +167,7 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
             }
         }
 
-        public static void LoggedIn(int ID)
+        public static void LoggedIn()
         {
             Console.Clear();
             Console.WriteLine($"Welcome {_currentUser.Username}\nChoose what you would like to do next\n" +
@@ -188,25 +188,26 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                             Menu();
                             break;
                         case "2":
-                            LoggedIn(ID);
+                            LoggedIn();
                             break;
                         default:
-                            LoggedIn(ID);
+                            LoggedIn();
                             break;
                     }
                     break;
                 case "1":
                     Console.Clear();
-                    userList[ID].GoShopping(ID);
+                    _currentUser.GoShopping();
                     break;
                 case "2":
-                    userList[ID].ShopingCart(ID);
+                    Console.WriteLine("*************************************************************************");
+                    _currentUser.ShopingCart();
                     Console.WriteLine("\nPress any key to go back...");
                     Console.ReadKey();
-                    LoggedIn(ID);
+                    LoggedIn();
                     break;
                 case "3":
-                    userList[ID].CheckOut(ID); //***************************
+                    _currentUser.CheckOut(); //***************************
                     break;
                 case "4":
                     Console.Clear();
@@ -229,10 +230,10 @@ namespace Lab2  //For next time: plays appropriet methods inside appropriate cla
                     }
                     Console.WriteLine($"Currency is now set to {_currentUser._currency}\n\nPress any key");
                     Console.ReadKey();
-                    LoggedIn(ID);
+                    LoggedIn();
                     break;
                 default:
-                    LoggedIn(ID);
+                    LoggedIn();
                     break;
             }
             string level = Convert.ToString(MemberLevel.Bronze);
